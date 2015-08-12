@@ -1,12 +1,14 @@
 {
   "name": "normalize-array-number",
-  "description": "",
+  "description": "normalize a numeric prop in an array between 0:100",
   "repository": "https://github.com/parro-it/normalize-array-number.git",
   "version": "1.0.0",
   "main": "dist/index.js",
   "dependencies": {
     "babel-runtime": "^5.8.20"
   },
+  "keywords": ["normalize","normalization"],
+  "license": "MIT"
   "author": "parro-it",
   "scripts": {
     "test": "mocha test/*_test.js test/**/*_test.js --require ./test/_init || echo failed",
