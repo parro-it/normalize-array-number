@@ -1,34 +1,44 @@
 'use strict';
 
-var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
-
-var _this = this;
-
 var moduleRoot = '../es6';
 if (process.env.TEST_RELEASE) {
   moduleRoot = '../dist';
 }
 
-var normalizeArrayNumber = require(moduleRoot);
+var normalize = require(moduleRoot);
 
-describe('normalizeArrayNumber', function () {
-  it('works', function callee$1$0() {
-    var result;
-    return _regeneratorRuntime.async(function callee$1$0$(context$2$0) {
-      while (1) switch (context$2$0.prev = context$2$0.next) {
-        case 0:
-          context$2$0.next = 2;
-          return _regeneratorRuntime.awrap(normalizeArrayNumber());
+describe('normalize', function () {
+  it('normalize values with min,max defaulted to 0,100', function () {
+    var result = normalize([{ n: 2 }, { n: 4 }, { n: 0 }], 'n');
 
-        case 2:
-          result = context$2$0.sent;
+    result.should.be.deep.equal([{ n: 50 }, { n: 100 }, { n: 0 }]);
+  });
 
-          result.should.be.equal(42);
+  it('normalize values with custom min and max', function () {
+    var result = normalize([{ n: 2 }, { n: 4 }, { n: 0 }], {
+      prop: 'n',
+      min: 4,
+      max: 6
+    });
 
-        case 4:
-        case 'end':
-          return context$2$0.stop();
-      }
-    }, null, _this);
+    result.should.be.deep.equal([{ n: 5 }, { n: 6 }, { n: 4 }]);
+  });
+
+  it('work correctly without 0 in values', function () {
+    var result = normalize([{ n: 2 }, { n: 5 }, { n: 8 }], 'n');
+
+    result.should.be.deep.equal([{ n: 0 }, { n: 50 }, { n: 100 }]);
+  });
+
+  it('no round by default', function () {
+    var result = normalize([{ n: 2.412 }, { n: 5 }, { n: 8.42 }], 'n');
+
+    result.should.be.deep.equal([{ n: 0 }, { n: 43.07589880159787 }, { n: 100 }]);
+  });
+
+  it('round if specified', function () {
+    var result = normalize([{ n: 2.412 }, { n: 5 }, { n: 8.42 }], { prop: 'n', round: 3 });
+
+    result.should.be.deep.equal([{ n: 0 }, { n: 43.076 }, { n: 100 }]);
   });
 });
